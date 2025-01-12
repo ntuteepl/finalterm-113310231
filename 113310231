@@ -264,7 +264,7 @@ class Healer : public Character
  void healCharacter(Character* team[])
  {
   int C;
-  cout << "Choose an character to heal: (Enter their index, e.g., 1)\n";
+  cout << "Choose an character to heal: (ex: 1)\n";
   cin >> C;
   if( team[C-1]->getHP() + team[C-1]->getMAXHP() * heal / 100 < team[C-1]->getMAXHP())
    team[C-1]->setHP( team[C-1]->getHP() + team[C-1]->getMAXHP() * heal / 100 );
