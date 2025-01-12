@@ -330,13 +330,13 @@ public:
     int getAttack() { return attack; }
     int getpower() {return power;}
     void applySpecial() 
- {
-        if (hp < 700) 
-  {
-            hp += 70;
-            if (hp > 700) 
-    hp = 700;
-            cout << name << " heals itself for 70 HP!\n";
+    {
+        if (hp < 2000) 
+        {
+            hp += 100;
+            if (hp > 2000) 
+                hp = 2000;
+            cout << name << " heals itself for 100 HP!\n";
         }
     }
 };
