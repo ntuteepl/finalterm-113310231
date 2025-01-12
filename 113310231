@@ -330,13 +330,13 @@ public:
     int getAttack() { return attack; }
     int getpower() {return power;}
     void applySpecial() 
-    {
+ {
         if (hp < 2000) 
-        {
+  {
             hp += 100;
             if (hp > 2000) 
-                hp = 2000;
-            cout << name << " heals itself for 100 HP!\n";
+    hp = 2000;
+            cout << name << " heals itself for 1001 HP!\n";
         }
     }
 };
@@ -437,4 +437,224 @@ void combat(Character* team[], Monster* monster)
           cin >> a >> b;
           if(team[a-1]->getHP() <= 0) 
            cout << "The first charactor is dead.\n";
-          if(te
+          if(team[b-1]->getHP() <= 0) 
+           cout << "The second charactor is dead.\n";
+   }while(team[a-1]->getHP() <= 0 || team[b-1]->getHP() <= 0);
+         
+   
+         // 處理第一個角色的攻擊
+         team[a - 1]->healCharacter(team); 
+      team[a - 1]->attackMonster(monster); 
+ 
+         // 處理第二個角色的攻擊
+         team[b - 1]->healCharacter(team); 
+         team[b - 1]->attackMonster(monster); 
+  }
+  else
+  {
+   cout << "Select only one character to attack: (ex: 1)\n";
+   while(cin >> a) 
+    if(team[a-1]->getHP() == 0) 
+        cout << "The charactor is dead.Please re-enter a role.\n";
+    else 
+     break;
+   
+   // 處理角色的攻擊
+   team[a - 1]->healCharacter(team);
+      team[a - 1]->attackMonster(monster); 
+  }
+ 
+   // 檢查是否結束
+        if (monster->getHP() <= 0) 
+  {
+            cout << "VICTORY !!!\n";
+            cout << "Remaining characters:\n";
+            for (int i = 0; i < 3; ++i) 
+   {
+                if (team[i]->getHP() > 0) 
+    {
+                    team[i]->print(); // 顯示還活著的角色
+                }
+            }
+            break;
+        }
+       
+        if( survivor>=2 )
+  {
+   if(team[a-1]->getStun() || team[b-1]->getStun())
+          cout << "The monster is stunned for this turn.\n";
+         else
+         {
+          // 怪物特殊能力
+          monster->applySpecial();  // 確保怪物的特殊技能在攻擊後執行
+  
+          // 顯示怪物治療後的狀態
+          monster->print();
+  
+          // 怪物攻擊
+          cout << "Monster attacks!\n";
+  
+          // 計算活著的角色數量
+          int aliveCount = 0;
+          for (int i = 0; i < 3; ++i) 
+    {
+              if (team[i]->getHP() > 0) 
+     {
+                  ++aliveCount;
+              }
+          }
+  
+          // 如果有存活的角色，計算傷害
+          if (aliveCount > 0) 
+    {
+     int allAggro = 0;
+     for(int i=0; i<3; i++)
+     {
+      if(team[i]->getHP() > 0 )
+       allAggro=allAggro + team[i]->getaggro();
+     }
+      
+  
+              // 對所有存活角色造成傷害
+              for (int i = 0; i < 3; ++i) 
+     {
+                  if (team[i]->getHP() > 0) 
+      {
+       int damage =monster->getAttack() * team[i]->getaggro() / allAggro;
+                      team[i]->setHP(team[i]->getHP() - damage);
+                      if(team[i]->getHP() <=0)
+                       team[i]->setHP(0);
+                      cout << team[i]->getName() << " takes " << damage << " damage! Remaining HP: " << team[i]->getHP() << "\n";
+                  }
+              }
+          } 
+   }
+  }
+  else
+  {
+   if(team[a-1]->getStun())
+          cout << "The monster is stunned for this turn.\n";
+         else
+         {
+          // 怪物特殊能力
+          monster->applySpecial();  // 確保怪物的特殊技能在攻擊後執行
+  
+          // 顯示怪物治療後的狀態
+          monster->print();
+  
+          // 怪物攻擊
+          cout << "Monster attacks!\n";
+  
+          // 計算活著的角色數量
+          int aliveCount = 0;
+          for (int i = 0; i < 3; ++i) 
+    {
+              if (team[i]->getHP() > 0) 
+     {
+                  ++aliveCount;
+              }
+          }
+  
+          // 如果有存活的角色，計算傷害
+          if (aliveCount > 0) 
+    {
+     int allAggro = 0;
+     for(int i=0; i<3; i++)
+     {
+      if(team[i]->getHP() > 0 )
+       allAggro=allAggro + team[i]->getaggro();
+     }
+      
+  
+              // 對所有存活角色造成傷害
+              for (int i = 0; i < 3; ++i) 
+     {
+                  if (team[i]->getHP() > 0) 
+      {
+       int damage =monster->getAttack() * team[i]->getaggro() / allAggro;
+                      team[i]->setHP(team[i]->getHP() - damage);
+                      if(team[i]->getHP() <=0)
+                       team[i]->setHP(0);
+                      cout << team[i]->getName() << " takes " << damage << " damage! Remaining HP: " << team[i]->getHP() << "\n";
+                  }
+              }
+          } 
+   }
+  }
+
+        // 檢查角色是否死亡
+        bool allDead = true;
+        for (int i = 0; i < 3; ++i) 
+  {
+            if (team[i]->getHP() > 0) 
+   {
+                allDead = false;
+                break;
+            }
+        }
+
+        if (allDead) 
+  {
+            cout << "DEFEAT...\n";
+            cout << "Remaining monster status:\n";
+            monster->print(); // 顯示怪物剩餘狀態
+            break;
+        }
+
+        // 下一回合
+        ++round;
+    }
+}
+
+int main() 
+{
+    Character* team[3];
+    string name;
+    int level, role;
+
+    // 角色選擇
+    for (int i = 0; i < 3; i++) 
+ {
+        cout << "Enter character name and level (1-15):\n";
+        cin >> name >> level;
+
+        cout << "Select role: 1. Warrior 2. Wizard 3. Archer 4. Hunter 5. Healer\n";
+        cin >> role;
+
+        if(role==1)
+            team[i]=new Warrior(name, level); 
+        else if(role==2)
+            team[i]=new Wizard(name, level);
+        else if(role==3)
+            team[i]=new Archer(name, level);
+        else if(role==4)
+            team[i]=new Hunter(name, level);
+        else 
+            team[i]=new Healer(name, level);
+    }
+
+    // 選擇怪物
+    int monsterChoice;
+    cout << "Choose a monster: 1. Goblin 2. StoneMonster 3. Cerberus\n";
+    cin >> monsterChoice;
+
+    Monster* monster;
+    if(monsterChoice==1)
+        monster = new Goblin();
+    if(monsterChoice==2)
+        monster = new StoneMonster();
+    if(monsterChoice==3)
+        monster = new Cerberus();
+    
+
+    // 開始戰鬥
+    combat(team, monster);
+
+    // 清理記憶體
+    for (size_t i = 0; i < 3; ++i) {
+        delete team[i];
+    }
+    delete monster;
+
+    return 0;
+}
